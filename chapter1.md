@@ -140,9 +140,37 @@ CPU가 Bob의 터미널과 연결된 쉘에게 양도되었다고 생각하자. 
 
 ![](/assets/7.PNG)
 
-바로 CPU에 한 Binary Bit를 도입한 것이다. 이 bit을 우리는 **'mode bit'**이라 칭한다. 비트라는 건 알다시피 2개의 데이터\(0과 1\)만을 저장할 수 있다. 0은 유저모드를 의미하고 1은 커널모드를 뜻한다. 우선 우리가 메모리와 CPU에 대해서 알고 있는 개념을 다시한 번 정리해보자. 그림과 함께 설명을 보자.
+바로 CPU에 한 Binary Bit를 도입한 것이다. 위 그림에 빨간색 네모칸이 바로 그 bit\(비트\)다. 이 bit을 우리는 **'mode bit'**이라 칭한다. 비트라는 건 알다시피 2개의 데이터\(0과 1\)만을 저장할 수 있다. 0은 유저모드를 의미하고 1은 커널모드를 뜻한다. 우선 우리가 메모리와 CPU에 대해서 알고 있는 개념을 다시한 번 정리해보자. 그림과 함께 설명을 보자.
 
-CPU의 Control Unit 파트에 PC는 Program Counter라고 하는 특수 레지스터다. PC에서는 이번에 수행해야 할 instruction\(명령\)의 주소를 메모리로 보낸다. MAR은 Memory Address Register이며 Address Bus라고도 이해할 수 있는데, MAR이 읽어들인 주소에 해당하는 데이터를 MBR\(Memory Buffer Register\)에 담아 IR\(Instruction Register\)에 보낸다.
+CPU의 Control Unit 파트에** PC는 Program Counter라고 하는 특수 레지스터**다. **PC에서는 이번에 수행해야 할 instruction\(명령\)의 주소**를 메모리로 보낸다. **MAR은 Memory Address Register**이며 **Address Bus**라고도 이해할 수 있는데, MAR이 읽어들인 주소에 **해당하는 데이터를 MBR\(Memory Buffer Register\)에 담아 IR\(Instruction Register\)에 보낸다.**
 
-IR로 들어온 Instruction\(명령\)은 우측 하단과 같은 구조를 지닌다. **op-code**에는 수행해야 할 명령이 적혀있고 그 옆에는 **operands**라고 하는 명령 인수들이 적혀 있다.
+IR로 들어온 **Instruction\(명령\)은 위 그림의 우측 하단과 같은 구조**를 지닌다. **op-code**에는 수행해야 할 명령이 적혀있고 그 옆에는 **operands**라고 하는 명령 인수들이 적혀 있다. \(**i와 j 주소에 있는 값을 더하라**는 의미 정도로 해석할 수 있다.\)
+
+![](/assets/7-1.PNG)
+
+Op-code를 읽어들여 명령어를 처리하는데, **i와 j에 해당하는 메모리 주소에 **담겨 있는 값을 알아내기 위해 또 다시 메로리에 접근해서 연산을 진행한다.
+
+#### mode bit\(모드 비트\) 추가설명
+
+CPU에는 한 바이너리 비트인 **모드 비트**라는 개념이 존재하고, **그것은 0 또는 1의 값**을 갖는다. 커널 모드에서 동작하느냐 유저 모드에서 동작하느냐를 정해주는 이 바이너리 비트를 우리는 일단 0이면 유저모드, 1이면 커널모드로 동작한다고 생각해보자.
+
+![](/assets/8.PNG)
+
+만약 이 비트가 **커널모드\(1\)**로 되어 있다면 CPU는 **어떠한 영역의 메모리라도 접근할 수 있다. **커널모드가 아닌 유저모드로\(0\)로 되어 있다면 모든 메모리에 접근\(Access\)은 불가능하고 자신의 Address Space만 접근가능하다. 
+
+또한 **커널모드\(1\)일 경우에는 모든 instruction이나 op-code를 수행\(execute\)할 수 있지만**, 유저모드\(0\)라면 I/O instruction이나 **special register accesses**와 관련된 instruction은 금지된다. 즉 유저모드에서는 타인에게 큰 영향을 줄 수 있는 instruction은 모두 거부되는 것이다.
+
+Note: **special register accesses**란 **스택 포인터\(SP\)나 프로그램 카운터\(PC\)**와 같은 특별한 레지스터에 대해 값을 읽는 등의 행위를 말한다. 
+
+![](/assets/9.PNG)
+
+#### 커널모드와 유저모드
+
+인천 공항 보안 검색대를 생각해보자. 일반 사람들이라면 보안 검색대를 반드시 통과해야겠지만, 자신이 대통령이나 국가원수에 해당하는 중책이고 매우 바쁜일이 있다면 보안 검색대를 거치지 않고 바로 공항을 나설 수 있다.
+
+CPU는 항상 메모리서 address를 메모리에 건넨다. 원하는 instruction이 있다면 해당 instruction의 주소를 Program Counter가 메모리로 보낸다. 이 과정이 CPU가 메모리에게 **"이 instruction을 수행해야 하니 메모리에 관련된 코드를 나에게 보내다오" **라고 말하는 과정이며, instruction이 오면 그걸 실행\(execute\)하는 과정에서 또 관련 매개변수\(operands\)에 관련된 주소를 보내고 관련 정보를 받아온다.
+
+이처럼 CPU는 계속 메모리에게 address를 보내는 작업을 진행하는 것인데, CPU가 메모리로 주소를 보낼 때는 그 당시 모드 비트가 어떤 것으로 되어 있느냐가 정말 중요하다.
+
+
 
