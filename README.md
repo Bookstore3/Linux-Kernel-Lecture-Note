@@ -1,3 +1,4 @@
-# My Awesome Book
+# 카우와 스토어의 운영체제 강의노트
 
-This file file serves as your book's preface, a great place to describe your book's content and ideas.
+이 강의노트는 OLC \(Open source software Learning Community\) 사이트의 온라인 강좌 중 고건 교수님의 'Kernel of Linux'를 수강한 후 작성한 강의노트입니다.
+
