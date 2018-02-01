@@ -140,11 +140,9 @@ CPU가 Bob의 터미널과 연결된 쉘에게 양도되었다고 생각하자. 
 
 ![](/assets/7.PNG)
 
-바로 CPU에 한 Binary Bit를 도입한 것이다. 이 bit을 우리는 **'mode bit'**이라 칭한다. 우선 우리가 메모리와 CPU에 대해서 알고 있는 개념을 다시한 번 정리해보자. 그림과 함께 설명을 보자.
+바로 CPU에 한 Binary Bit를 도입한 것이다. 이 bit을 우리는 **'mode bit'**이라 칭한다. 비트라는 건 알다시피 2개의 데이터\(0과 1\)만을 저장할 수 있다. 0은 유저모드를 의미하고 1은 커널모드를 뜻한다. 우선 우리가 메모리와 CPU에 대해서 알고 있는 개념을 다시한 번 정리해보자. 그림과 함께 설명을 보자.
 
 CPU의 Control Unit 파트에 PC는 Program Counter라고 하는 특수 레지스터다. PC에서는 이번에 수행해야 할 instruction\(명령\)의 주소를 메모리로 보낸다. MAR은 Memory Address Register이며 Address Bus라고도 이해할 수 있는데, MAR이 읽어들인 주소에 해당하는 데이터를 MBR\(Memory Buffer Register\)에 담아 IR\(Instruction Register\)에 보낸다.
 
 IR로 들어온 Instruction\(명령\)은 우측 하단과 같은 구조를 지닌다. **op-code**에는 수행해야 할 명령이 적혀있고 그 옆에는 **operands**라고 하는 명령 인수들이 적혀 있다.
-
-
 
