@@ -1,4 +1,4 @@
-# 1강\(By wisecow\)
+# 1강\(by wiseCow\)
 
 ---
 
